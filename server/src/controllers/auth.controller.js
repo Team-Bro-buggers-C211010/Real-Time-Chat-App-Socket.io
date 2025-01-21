@@ -1,3 +1,4 @@
+import { generateToken } from '../lib/utils.js';
 import User from './../models/user.model.js';
 import bcrypt from 'bcryptjs';
 export const signup = async (req, res) => {
@@ -22,15 +23,22 @@ export const signup = async (req, res) => {
         })
 
         if(newUser){
+            generateToken(newUser._id, res);
             await newUser.save();
-            return res.status(201).json({message: "User created successfully"});
+            return res.status(201).json({
+                _id: newUser._id,
+                userName: newUser.userName,
+                email: newUser.email,
+                profileImage: newUser.profileImage,
+            });
         }
         else {
-            return res.status(400).json({message: "Failed to create user"});
+            return res.status(400).json({message: "Invalid user data"});
         }
     }
     catch (err) {
-
+        console.log("Error in signup: ", err.message);
+        return res.status(500).json({message: "Internal server error"});
     }
 };
 
