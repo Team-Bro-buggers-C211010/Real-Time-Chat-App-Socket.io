@@ -1,3 +1,5 @@
+import User from '../models/user.model';
+import Message from './../models/message.model';
 export const getUsersForSideBar = async (req, res) => {
     try {
         const loggedInUserId = req.user._id;
@@ -6,6 +8,30 @@ export const getUsersForSideBar = async (req, res) => {
         res.status(200).json(filteredUsers);
     } catch (err) {
         console.log("Error in getUsersForSideBar: ", err.message);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+}
+
+export const getMessages = async (req, res) => {
+    try {
+        const { id: userToChatId } = req.params;
+        const myId = req.user._id;
+        const messages = await Message.find( {
+            $or: [
+                {
+                    senderId: myId,
+                    receiverId: userToChatId
+                },
+                {
+                    senderId: userToChatId,
+                    receiverId: myId
+                }
+            ]
+        } );
+
+        res.status(200).json(messages);
+    } catch (err) {
+        console.log("Error in getMessages: ", err.message);
         res.status(500).json({ message: 'Internal server error' });
     }
 }
