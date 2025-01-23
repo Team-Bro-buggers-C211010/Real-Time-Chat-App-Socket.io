@@ -1,6 +1,6 @@
 import express from 'express';
-import { verifyToken } from '../middleware/auth.middleware';
-import { getMessages, getUsersForSideBar, sendMessages } from '../controllers/message.controller';
+import { verifyToken } from '../middleware/auth.middleware.js';
+import { getMessages, getUsersForSideBar, sendMessages } from '../controllers/message.controller.js';
 
 const router = express.Router();
 
