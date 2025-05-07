@@ -5,6 +5,7 @@ import SignUp from "../pages/SignUp";
 import Login from "../pages/Login";
 import Settings from "../pages/Settings";
 import Profile from "../pages/Profile";
+import PrivateRoute from "./PrivateRoute";
 
 const router = createBrowserRouter([
     {
@@ -13,7 +14,7 @@ const router = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <Home />
+                element: <PrivateRoute> <Home /> </PrivateRoute>
             },
             {
                 path: "/signup",
@@ -29,7 +30,7 @@ const router = createBrowserRouter([
             },
             {
                 path: "/profile",
-                element: <Profile />
+                element: <PrivateRoute> <Profile /> </PrivateRoute>
             }
         ]
     }
