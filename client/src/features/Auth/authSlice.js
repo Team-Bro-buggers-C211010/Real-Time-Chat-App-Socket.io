@@ -9,10 +9,14 @@ const initialState = {
   isCheckingAuth: true,
 };
 
-export const authSlice = createSlice({
+const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    setAuthUser: (state, action) => {
+        state.authUser = action.payload;
+    }
+  },
   extraReducers: (builder) => {
     builder
       // Check Auth
@@ -30,5 +34,5 @@ export const authSlice = createSlice({
   },
 });
 
-export const {setAuthUser} = authSlice.actions;
+export const { setAuthUser } = authSlice.actions;
 export default authSlice.reducer;
