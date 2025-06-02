@@ -5,6 +5,9 @@ import { FaRegUser } from "react-icons/fa";
 import { TfiEmail } from "react-icons/tfi";
 import { MdOutlineLock } from "react-icons/md";
 import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
+import { Link } from "react-router";
+import AuthImagePattern from "../components/AuthImagePattern";
+
 
 const SignUp = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -88,10 +91,10 @@ const SignUp = () => {
                 onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="input input-bordered w-full pl-10"
               />
-              <button 
-              type="button"
-              className="absolute inset-y-0 right-0 pr-3 flex items-center"
-              onClick={() => setShowPassword(!showPassword)}>
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setShowPassword(!showPassword)}>
                 {showPassword ? (
                   <FaRegEyeSlash className="size-5 text-base-content/40" />
                 ) : (
@@ -102,18 +105,24 @@ const SignUp = () => {
           </div>
 
           <button type="submit" className="btn btn-primary w-full" disabled={isSignUp}>
-            {true ? (
+            {isSignUp ? (
               <span className="loading loading-spinner"></span>
             ) : (
-              <span>Sign Up</span>
+              <span>Create Account</span>
             )}
           </button>
         </form>
+
+        <div className="text-center">
+          <p className="text-base-content/60">
+            Already have an account?{" "}
+            <Link to="/login" className="link link-primary">Sign In</Link>
+          </p>
+        </div>
       </div>
 
       {/* right side */}
-      <div className="flex flex-col justify-center items-center">
-      </div>
+      <AuthImagePattern title={"Welcome to PingMe!"} subtitle={"Join us and start chatting!"} />
     </div>
   )
 }
