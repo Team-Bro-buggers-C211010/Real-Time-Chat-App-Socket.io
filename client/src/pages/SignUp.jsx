@@ -1,35 +1,28 @@
 import { useState } from "react";
 import { useSelector } from 'react-redux';
 import messageLogo from "../../public/PingMe_Chat_Logo.png";
-import { FaRegUser } from "react-icons/fa";
+import { FaRegUser, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { TfiEmail } from "react-icons/tfi";
 import { MdOutlineLock } from "react-icons/md";
-import { FaRegEye, FaRegEyeSlash } from "react-icons/fa6";
-import { Link } from "react-router";
+import { Link } from "react-router-dom"; // FIXED: use react-router-dom
 import AuthImagePattern from "../components/AuthImagePattern";
-
+import toast from 'react-hot-toast';
+import { useForm } from "react-hook-form";
 
 const SignUp = () => {
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const [showPassword, setShowPassword] = useState(false);
-  const [formData, setFormData] = useState({
-    fullName: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-  });
   const { isSignUp } = useSelector((state) => state.auth);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // Perform sign-up logic here
-    console.log("Form submitted:", formData);
-  }
+  const onSubmit = (data) => {
+    toast.success('Successfully Submitted!');
+    console.log("Form submitted:", data);
+  };
 
   return (
     <div className="min-h-screen grid lg:grid-cols-2 ">
       {/* left side */}
-      <div className="flex flex-col justify-center items-center p-6 sm:p-12 bg-gray-100">
-        {/* logo */}
+      <div className="flex flex-col justify-center items-center p-6 sm:p-12 bg-base-100">
         <div className="w-full max-w-md space-y-8">
           <div className="flex flex-col items-center  mb-8">
             <div className="size-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
@@ -41,7 +34,7 @@ const SignUp = () => {
         </div>
 
         {/* form */}
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6 md:w-[50%]">
           <div className="form-control">
             <label className="label">
               <span className="label-text font-medium">Full Name</span>
@@ -51,14 +44,15 @@ const SignUp = () => {
                 <FaRegUser className="size-4 text-base-content/40" />
               </div>
               <input
+                {...register("fullName", { required: true })}
                 type="text"
                 placeholder="John Doe"
-                value={formData.fullName}
-                onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                 className="input input-bordered w-full pl-10"
               />
             </div>
+            {errors.fullName && <span role="alert" className="text-red-500">Full Name is required</span>}
           </div>
+
           <div className="form-control">
             <label className="label">
               <span className="label-text font-medium">Email</span>
@@ -68,14 +62,22 @@ const SignUp = () => {
                 <TfiEmail className="size-4 text-base-content/40" />
               </div>
               <input
+                {...register("email", {
+                  required: true,
+                  pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+                })}
                 type="email"
                 placeholder="you@example.com"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="input input-bordered w-full pl-10"
               />
             </div>
+            {errors.email && (
+              <span role="alert" className="text-red-500">
+                {errors.email.type === "required" ? "Email is required" : "Invalid email format"}
+              </span>
+            )}
           </div>
+
           <div className="form-control">
             <label className="label">
               <span className="label-text font-medium">Password</span>
@@ -85,16 +87,19 @@ const SignUp = () => {
                 <MdOutlineLock className="size-5 text-base-content/40" />
               </div>
               <input
+                {...register("password", {
+                  required: true,
+                  pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{6,}$/
+                })}
                 type={showPassword ? "text" : "password"}
                 placeholder="********"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="input input-bordered w-full pl-10"
               />
               <button
                 type="button"
                 className="absolute inset-y-0 right-0 pr-3 flex items-center"
-                onClick={() => setShowPassword(!showPassword)}>
+                onClick={() => setShowPassword(!showPassword)}
+              >
                 {showPassword ? (
                   <FaRegEyeSlash className="size-5 text-base-content/40" />
                 ) : (
@@ -102,6 +107,11 @@ const SignUp = () => {
                 )}
               </button>
             </div>
+            {errors.password && (
+              <span role="alert" className="text-red-500">
+                Password must be at least 6 characters and include uppercase, lowercase, number, and special character.
+              </span>
+            )}
           </div>
 
           <button type="submit" className="btn btn-primary w-full" disabled={isSignUp}>
@@ -124,7 +134,7 @@ const SignUp = () => {
       {/* right side */}
       <AuthImagePattern title={"Welcome to PingMe!"} subtitle={"Join us and start chatting!"} />
     </div>
-  )
-}
+  );
+};
 
-export default SignUp
+export default SignUp;

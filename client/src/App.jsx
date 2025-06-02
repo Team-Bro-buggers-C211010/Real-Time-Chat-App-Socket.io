@@ -1,5 +1,4 @@
-import Navbar from "./components/shared/Navbar"
-
+import Navbar from "./components/shared/Navbar";
 function App() {
   return (
     <>
@@ -11,3 +10,4 @@ function App() {
 }
 
 export default App
+
