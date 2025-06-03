@@ -6,6 +6,7 @@ import Login from "../pages/Login";
 import Settings from "../pages/Settings";
 import Profile from "../pages/Profile";
 import PrivateRoute from "./PrivateRoute";
+import RedirectIfAuth from "./RedirectIfAuth";
 
 const router = createBrowserRouter([
     {
@@ -18,11 +19,11 @@ const router = createBrowserRouter([
             },
             {
                 path: "/signup",
-                element: <SignUp />
+                element: <RedirectIfAuth><SignUp /></RedirectIfAuth>
             },
             {
                 path: "/login",
-                element: <Login />
+                element: <RedirectIfAuth><Login /></RedirectIfAuth>
             },
             {
                 path: "/settings",

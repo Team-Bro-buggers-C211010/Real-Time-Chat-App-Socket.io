@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { useSelector } from 'react-redux';
-import messageLogo from "../../public/PingMe_Chat_Logo.png";
+import { useDispatch, useSelector } from 'react-redux';
+import messageLogo from "/PingMe_Chat_Logo.png";
 import { FaRegUser, FaRegEye, FaRegEyeSlash } from "react-icons/fa";
 import { TfiEmail } from "react-icons/tfi";
 import { MdOutlineLock } from "react-icons/md";
@@ -8,15 +8,20 @@ import { Link } from "react-router-dom"; // FIXED: use react-router-dom
 import AuthImagePattern from "../components/AuthImagePattern";
 import toast from 'react-hot-toast';
 import { useForm } from "react-hook-form";
+import { signupUser } from "../features/Auth/authThunk";
+
 
 const SignUp = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm();
+  const { register, handleSubmit, reset ,formState: { errors } } = useForm();
   const [showPassword, setShowPassword] = useState(false);
   const { isSignUp } = useSelector((state) => state.auth);
+  const dispatch = useDispatch();
 
   const onSubmit = (data) => {
+    dispatch(signupUser(data));
     toast.success('Successfully Submitted!');
     console.log("Form submitted:", data);
+    reset(); // Reset the form after submission
   };
 
   return (
@@ -44,13 +49,13 @@ const SignUp = () => {
                 <FaRegUser className="size-4 text-base-content/40" />
               </div>
               <input
-                {...register("fullName", { required: true })}
+                {...register("userName", { required: true })}
                 type="text"
                 placeholder="John Doe"
                 className="input input-bordered w-full pl-10"
               />
             </div>
-            {errors.fullName && <span role="alert" className="text-red-500">Full Name is required</span>}
+            {errors.userName && <span role="alert" className="text-red-500">Full Name is required</span>}
           </div>
 
           <div className="form-control">
@@ -92,7 +97,7 @@ const SignUp = () => {
                   pattern: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z\d]).{6,}$/
                 })}
                 type={showPassword ? "text" : "password"}
-                placeholder="********"
+                placeholder="******"
                 className="input input-bordered w-full pl-10"
               />
               <button
@@ -123,7 +128,7 @@ const SignUp = () => {
           </button>
         </form>
 
-        <div className="text-center">
+        <div className="text-center mt-4">
           <p className="text-base-content/60">
             Already have an account?{" "}
             <Link to="/login" className="link link-primary">Sign In</Link>
