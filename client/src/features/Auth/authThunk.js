@@ -29,3 +29,18 @@ export const signupUser = createAsyncThunk(
     }
   }
 );
+
+export const logoutUser = createAsyncThunk(
+  "auth/logoutUser",
+  async (_, thunkAPI) => {
+    const axiosSecure = useAxiosSecure();
+    try {
+      const res = await axiosSecure.post("/auth/logout");
+      toast.success("Logged out successfully");
+      return res.data;
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Logout failed");
+      return thunkAPI.rejectWithValue(err.response?.data?.message || "Logout failed");
+    }
+  }
+)
