@@ -2,12 +2,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { FaCameraRetro, FaRegUser } from "react-icons/fa";
 import avatarDemo from "/avatarDemo.png"
 import { HiOutlineMail } from "react-icons/hi";
+import { updateProfile } from '../features/Auth/authThunk';
+import { useState } from 'react';
 
 const Profile = () => {
   const { authUser, isUpdatingProfile } = useSelector((state) => state.auth);
+  const [selectedImage, setSelectedImage] = useState(null);
   const dispatch = useDispatch();
   const handleImageUpload = (e) => {
-
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onloadend = () => {
+      setSelectedImage(reader.result);
+      dispatch(updateProfile({ profileImage: reader.result }));
+    };
   }
   return (
     <div className='h-screen pt-20'>
@@ -20,11 +30,16 @@ const Profile = () => {
           <div className="flex flex-col items-center gap-4">
             <div className="relative">
               <div className='border-4 border-base-content rounded-full overflow-hidden'>
-                <img
-                  src={authUser.profilePic || avatarDemo}
-                  alt="Profile"
-                  className="size-32 rounded-full object-cover border-4 border-base-100"
-                />
+                {isUpdatingProfile ? (
+                  <div className="skeleton h-32 w-32 rounded-full"></div>
+                ) : (
+                  <img
+                    src={selectedImage || authUser.profileImage || avatarDemo}
+                    alt="Profile"
+                    className="size-32 rounded-full object-cover border-4 border-base-100"
+                  />
+                )}
+
               </div>
               <label
                 htmlFor="avatar-upload"

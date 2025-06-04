@@ -62,4 +62,15 @@ export const loginUser = createAsyncThunk(
 
 export const updateProfile = createAsyncThunk(
   "auth/updateProfile",
+  async (formData, thunkAPI) => {
+    const axiosSecure = useAxiosSecure();
+    try {
+      const res = await axiosSecure.put("/auth/update-profile", formData);
+      toast.success("Profile updated successfully");
+      return res.data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Profile update failed");
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Profile update failed");
+    }
+  }
 );
