@@ -47,10 +47,10 @@ export const logoutUser = createAsyncThunk(
 
 export const loginUser = createAsyncThunk(
   "auth/loginUser",
-  async (_, thunkAPI) => {
+  async (formData, thunkAPI) => {
     const axiosSecure = useAxiosSecure();
     try {
-      const res = await axiosSecure.post("/auth/login");
+      const res = await axiosSecure.post("/auth/login", formData);
       toast.success("Logged in successfully");
       return res.data;
     } catch (error) {

@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/Auth/authThunk";
-import toast from "react-hot-toast";
 import { useForm } from "react-hook-form";
 import messageLogo from "/PingMe_Chat_Logo.png";
 import AuthImagePattern from "../components/AuthImagePattern";
@@ -17,7 +16,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const onSubmit = (data) => {
     dispatch(loginUser(data));
-    toast.success('Successfully Logged In!');
     console.log("Form submitted:", data);
     reset(); // Reset the form after submission
   };

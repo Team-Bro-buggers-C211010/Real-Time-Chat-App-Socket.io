@@ -37,7 +37,6 @@ const authSlice = createSlice({
       })
       .addCase(signupUser.fulfilled, (state, action) => {
         state.authUser = action.payload;
-        console.log(state.authUser)
         state.isSignUp = false;
       })
       .addCase(signupUser.rejected, (state) => {
@@ -59,14 +58,13 @@ const authSlice = createSlice({
 
       // loginUser
       .addCase(loginUser.pending, (state) => {
-        state.isLogin = false;
+        state.isLogin = true;
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.authUser = action.payload;
-        state.isLogin = true;
+        state.isLogin = false;
       })
       .addCase(loginUser.rejected, (state) => {
-        state.authUser = null;
         state.isLogin = false;
       })
   },
