@@ -28,7 +28,7 @@ const Navbar = () => {
             {authUser &&
               (
                 <>
-                  <Link to={"/profile"} className="btn btn-sm btn-primary gap-2 transition-colors">
+                  <Link to={"/profile"} className="btn btn-sm gap-2 transition-colors">
                     <FaRegUser className="size-4" />
                     <span className="sm:hidden md:inline">Profile</span>
                   </Link>

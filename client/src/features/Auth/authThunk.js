@@ -59,3 +59,7 @@ export const loginUser = createAsyncThunk(
     }
   }
 )
+
+export const updateProfile = createAsyncThunk(
+  "auth/updateProfile",
+);

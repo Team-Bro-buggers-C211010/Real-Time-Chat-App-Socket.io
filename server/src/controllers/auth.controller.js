@@ -35,6 +35,7 @@ export const signup = async (req, res) => {
                 userName: newUser.userName,
                 email: newUser.email,
                 profileImage: newUser.profileImage,
+                createdAt: user.createdAt,
             });
         }
         else {
@@ -68,6 +69,7 @@ export const login = async (req, res) => {
             userName: user.userName,
             email: user.email,
             profileImage: user.profileImage,
+            createdAt: user.createdAt,
         });
     } catch (err) {
         console.log("Error in login: ", err.message);
