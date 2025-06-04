@@ -44,3 +44,18 @@ export const logoutUser = createAsyncThunk(
     }
   }
 )
+
+export const loginUser = createAsyncThunk(
+  "auth/loginUser",
+  async (_, thunkAPI) => {
+    const axiosSecure = useAxiosSecure();
+    try {
+      const res = await axiosSecure.post("/auth/login");
+      toast.success("Logged in successfully");
+      return res.data;
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Login failed");
+      return thunkAPI.rejectWithValue(error.response?.data?.message || "Login failed");
+    }
+  }
+)

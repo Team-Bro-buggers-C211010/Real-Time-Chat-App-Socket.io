@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux"
 import { Link } from 'react-router-dom';
 import pingMeLogo from "../../assets/PingMe_Logo.png";
-import { IoSettingsSharp, IoLogOutOutline, IoSettingsOutline } from "react-icons/io5";
+import { IoLogOutOutline, IoSettingsOutline } from "react-icons/io5";
 import { logoutUser } from "../../features/Auth/authThunk";
 import { FaRegUser } from 'react-icons/fa';
 
