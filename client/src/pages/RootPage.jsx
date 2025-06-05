@@ -6,6 +6,7 @@ import { checkAuth } from "../features/Auth/authThunk";
 
 const RootPage = () => {
     const { authUser, isCheckingAuth } = useSelector((state) => state.auth);
+    const { theme } = useSelector((state) => state.theme);
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -20,10 +21,8 @@ const RootPage = () => {
         )
     }
 
-    console.log({ authUser });
-
     return (
-        <div>
+        <div data-theme={theme}>
             <Navbar />
             <Outlet />
         </div>

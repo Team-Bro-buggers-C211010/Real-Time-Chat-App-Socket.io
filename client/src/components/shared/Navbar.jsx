@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import pingMeLogo from "../../assets/PingMe_Logo.png";
 import { IoLogOutOutline, IoSettingsOutline } from "react-icons/io5";
 import { logoutUser } from "../../features/Auth/authThunk";
@@ -7,6 +7,7 @@ import { FaRegUser } from 'react-icons/fa';
 
 const Navbar = () => {
   const { authUser } = useSelector((state) => state.auth)
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   return (
@@ -16,7 +17,7 @@ const Navbar = () => {
           <div className="flex items-center gap-8">
             <Link to="/" className="flex items-center gap-2.5 hover:opacity-80 transition-all">
               <div className="w-20 h-9 rounded-lg bg-primary/10 flex items-center justify-center">
-                <img className="w-full h-full object-cover rounded-lg text-primary" src={pingMeLogo} alt="Logo" />
+                <img className="w-full h-full object-cover rounded-lg text-primary filter drop-shadow-[0_0_4px_white]" src={pingMeLogo} alt="Logo" />
               </div>
             </Link>
           </div>
@@ -32,7 +33,7 @@ const Navbar = () => {
                     <FaRegUser className="size-4" />
                     <span className="sm:hidden md:inline">Profile</span>
                   </Link>
-                  <button className="flex gap-2 items-center hover:cursor-pointer" onClick={() => dispatch(logoutUser())}>
+                  <button className="flex gap-2 items-center hover:cursor-pointer" onClick={() => {dispatch(logoutUser()); navigate("/login");}}>
                     <IoLogOutOutline className="size-5" />
                     <span className="sm:hidden md:inline">Logout</span>
                   </button>

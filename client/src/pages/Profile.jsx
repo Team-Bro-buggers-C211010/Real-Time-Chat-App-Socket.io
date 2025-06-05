@@ -36,7 +36,7 @@ const Profile = () => {
                   <img
                     src={selectedImage || authUser.profileImage || avatarDemo}
                     alt="Profile"
-                    className="size-32 rounded-full object-cover border-4 border-base-100"
+                    className="size-32 rounded-full object-cover border-4 border-base-300"
                   />
                 )}
 
@@ -76,7 +76,7 @@ const Profile = () => {
               <input
                 type="text"
                 value={authUser.userName || ""}
-                className='input input-bordered w-full'
+                className='input font-semibold input-bordered w-full'
                 disabled
               />
             </div>
@@ -88,7 +88,7 @@ const Profile = () => {
               <input
                 type="email"
                 value={authUser.email || ""}
-                className='input input-bordered w-full'
+                className='input font-semibold input-bordered w-full'
                 disabled
               />
             </div>
