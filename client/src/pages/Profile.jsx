@@ -1,5 +1,6 @@
 import { useDispatch, useSelector } from 'react-redux';
-import { FaCameraRetro, FaRegUser } from "react-icons/fa";
+import { FaRegUser } from "react-icons/fa";
+import { TbCameraPlus } from "react-icons/tb";
 import avatarDemo from "/avatarDemo.png"
 import { HiOutlineMail } from "react-icons/hi";
 import { updateProfile } from '../features/Auth/authThunk';
@@ -20,7 +21,7 @@ const Profile = () => {
     };
   }
   return (
-    <div className='h-screen pt-20'>
+    <div className='min-h-screen pt-20 pb-5'>
       <div className='max-w-2xl mx-auto p-4 py-8'>
         <div className='bg-base-300 rounded-xl p-6 space-y-8'>
           <div className="text-center">
@@ -51,7 +52,7 @@ const Profile = () => {
                   ${isUpdatingProfile ? "animate-pulse pointer-events-none" : ""}
                 `}
               >
-                <FaCameraRetro className="w-5 h-5 text-base-200" />
+                <TbCameraPlus className="w-5 h-5 text-base-200" />
                 <input
                   type="file"
                   id="avatar-upload"
