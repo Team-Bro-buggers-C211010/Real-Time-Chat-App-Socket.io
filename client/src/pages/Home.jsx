@@ -1,6 +1,22 @@
+import { useSelector } from 'react-redux';
+import UserSideBar from '../components/UserSideBar';
+import ChatContainer from '../components/ChatContainer';
+import EmpytyChat from '../components/EmpytyChat';
 const Home = () => {
+  const selectedUser = useSelector((state) => state.chat);
   return (
-    <div>Home</div>
+    <div className='min-h-screen bg-base-200'>
+      <div className='flex items-center justify-center pt-20 px-4'>
+        <div className='bg-base-100 rounded-lg shadow-2xl w-full max-w-6xl h-[calc(100vh-8rem)]'>
+          <div className='flex h-full rounded-lg overflow-hidden'>
+            <UserSideBar />
+            {
+              selectedUser ? <ChatContainer /> : <EmpytyChat />
+            }
+          </div>
+        </div>
+      </div>
+    </div>
   )
 }
 
