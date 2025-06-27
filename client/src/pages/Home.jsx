@@ -11,7 +11,7 @@ const Home = () => {
           <div className='flex h-full rounded-lg overflow-hidden'>
             <UserSideBar />
             {
-              selectedUser ? <ChatContainer /> : <EmptyChat />
+              selectedUser ? <ChatContainer className={`${selectedUser ? "block" : "hidden sm:block"}`} /> : <EmptyChat className={`${selectedUser ? "block" : "hidden sm:block"}`} />
             }
           </div>
         </div>

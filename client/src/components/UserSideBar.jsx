@@ -18,11 +18,11 @@ const UserSideBar = () => {
 
 
   return (
-    <aside className="h-full w-1/4 lg:w-1/3 border-r border-base-300 flex-col transition-all duration-200 hidden sm:flex">
+    <aside className={`h-full w-full sm:w-1/4 lg:w-1/3 border-r border-base-300 flex-col transition-all duration-200 ${selectedUser ? "hidden sm:flex" : "flex"}`}>
       <div className="border-b border-base-300 p-5">
         <div className="flex items-center gap-2">
           <Users className="size-6"/>
-          <h2 className="font-medium hidden lg:block">Contacts</h2>
+          <h2 className="font-medium">Contacts</h2>
         </div>
       </div>
       <ul className="w-full overflow-y-auto py-3">
