@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { sendMessage } from "./chatThunk";
 
 const initialState = {
     chatMessages: [],
@@ -52,7 +53,19 @@ const chatSlice = createSlice({
             })
             .addCase('chat/fetchUsers/rejected', (state) => {
                 state.isUserLoading = false;
-            });
+            })
+
+            // send message
+            .addCase(sendMessage.pending, (state) => {
+                state.isChatLoading = true;
+            })
+            .addCase(sendMessage.fulfilled, (state, action) => {
+                state.chatMessages.push(action.payload);
+                state.isChatLoading = false;
+            })
+            .addCase(sendMessage.rejected, (state) => {
+                state.isChatLoading = false;
+            })
     }
 });
 

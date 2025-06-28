@@ -31,3 +31,17 @@ export const fetchUsers = createAsyncThunk(
     }
   }
 );
+
+export const sendMessage = createAsyncThunk(
+  "chat/sendMessage",
+  async (data, thunkAPI) => {
+    const axiosSecure = useAxiosSecure();
+    try {
+      const res = await axiosSecure.post("/messages/send/${data.receiverId}", data);
+      return res.data;
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to send message");
+      return thunkAPI.rejectWithValue(err.response?.data);
+    }
+  }
+);
