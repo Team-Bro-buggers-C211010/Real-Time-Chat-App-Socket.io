@@ -2,7 +2,7 @@ import { Image, Send, X } from "lucide-react";
 import { useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { sendMessage } from "../features/Chat/chatThunk";
+import { fetchChatMessages, sendMessage } from "../features/Chat/chatThunk";
 
 const MessageInput = () => {
   const { selectedUser } = useSelector((state) => state.chat);
@@ -24,16 +24,16 @@ const MessageInput = () => {
     };
   }
 
-  const handleMessageSubmit = (e) => {
+  const handleMessageSubmit = async (e) => {
     e.preventDefault();
     if(!message && !attachment) {
       toast.error('Please enter a message or select an image to send!!!');
       return;
     }
-    console.log(message, attachment, selectedUser._id);
-    dispatch(sendMessage({ message, attachment, receiverId: selectedUser._id }));
+    await dispatch(sendMessage({ message, attachment, receiverId: selectedUser._id }));
     setMessage("");
     setAttachment("");
+    await dispatch(fetchChatMessages(selectedUser._id));
   }
 
   return (
