@@ -8,7 +8,6 @@ const ChatContainer = () => {
   const { chatMessages, isChatLoading, selectedUser } = useSelector((state) => state.chat);
   const dispatch = useDispatch();
   const chatMessagesRef = useRef(null);
-  console.log(chatMessages[0]?.updatedAt.split('T')[0]);
 
   useEffect(() => {
     dispatch(fetchChatMessages(selectedUser._id));
@@ -29,8 +28,8 @@ const ChatContainer = () => {
               <>
                 {idx === 0 ? (
                   message?.updatedAt?.split('T')[0] === new Date().toISOString().split('T')[0]
-                    ? <div className="text-center text-sm w-fit mx-auto p-2 my-4 font-semibold bg-base-300 text-base-content/60">Today</div>
-                    : <div className="text-center text-sm w-fit mx-auto p-2 my-4 font-semibold bg-base-300 text-base-content/60">{message?.updatedAt?.split('T')[0]}</div>
+                    ? <div className="text-center text-sm w-fit mx-auto p-2 mb-4 font-semibold bg-base-300 text-base-content/60">Today</div>
+                    : <div className="text-center text-sm w-fit mx-auto p-2 mb-4 font-semibold bg-base-300 text-base-content/60">{message?.updatedAt?.split('T')[0]}</div>
                 ) : (
                   chatMessages[idx - 1]?.updatedAt?.split('T')[0] !== message?.updatedAt?.split('T')[0] ? (
                     message?.updatedAt?.split('T')[0] === new Date().toISOString().split('T')[0]
@@ -46,7 +45,7 @@ const ChatContainer = () => {
                       {message?.image && <img src={message?.image} className="w-fit object-cover" alt="sender image" />}
                       <div className="flex items-end justify-between gap-2 sm:gap-3 md:gap-4">
                         <p className="text-sm">{message.text}</p>
-                        <p className="text-[0.6rem] text-zinc-500">{message.updatedAt &&
+                        <p className="text-[0.6rem] font-semibold text-zinc-600">{message.updatedAt &&
                           new Date(message.updatedAt).toLocaleTimeString([], {
                             hour: '2-digit',
                             minute: '2-digit',
@@ -59,7 +58,7 @@ const ChatContainer = () => {
                       {
                         chatMessages[idx - 1]?.senderId._id !== message?.senderId._id ? (
                           <img src={message.senderId._id === selectedUser._id ? "" : message.senderId?.profileImage != "" ? message.senderId?.profileImage : "/avatarDemo.png"} className={`size-6 sm:size-8 md:size-10 rounded-full object-cover ${message.senderId._id === selectedUser._id && "hidden"}`} alt="" />
-                        ) : <img className="size-6 sm:size-8 md:size-10  rounded-full invisible" src="" alt="" />
+                        ) : (message.senderId._id !== selectedUser._id) && <img className="size-6 sm:size-8 md:size-10  rounded-full invisible" src="" alt="" />
                       }
                     </div>
                   </div>

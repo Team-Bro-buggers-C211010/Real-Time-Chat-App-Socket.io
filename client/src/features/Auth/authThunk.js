@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
+import { disconnectSocket } from "../Socket.io/socketThunk";
 
 export const checkAuth = createAsyncThunk(
   "auth/checkAuth",
@@ -37,6 +38,7 @@ export const logoutUser = createAsyncThunk(
     try {
       const res = await axiosSecure.post("/auth/logout");
       toast.success("Logged out successfully");
+      thunkAPI.dispatch(disconnectSocket());
       return res.data;
     } catch (err) {
       toast.error(err.response?.data?.message || "Logout failed");

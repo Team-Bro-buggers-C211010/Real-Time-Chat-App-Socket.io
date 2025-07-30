@@ -16,7 +16,6 @@ const Login = () => {
   const dispatch = useDispatch();
   const onSubmit = (data) => {
     dispatch(loginUser(data));
-    console.log("Form submitted:", data);
     reset(); // Reset the form after submission
   };
 

@@ -20,7 +20,6 @@ const SignUp = () => {
   const onSubmit = (data) => {
     dispatch(signupUser(data));
     toast.success('Successfully Submitted!');
-    // console.log("Form submitted:", data);
     reset(); // Reset the form after submission
   };
 
