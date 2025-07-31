@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import useAxiosSecure from "../../hooks/useAxiosSecure";
 import toast from "react-hot-toast";
-import { disconnectSocket } from "../Socket.io/socketThunk";
+import { connectSocket, disconnectSocket } from "../Socket.io/socketThunk";
 
 export const checkAuth = createAsyncThunk(
   "auth/checkAuth",
@@ -22,6 +22,7 @@ export const signupUser = createAsyncThunk(
     const axiosSecure = useAxiosSecure();
     try {
       const res = await axiosSecure.post("/auth/signup", formData);
+      thunkAPI.dispatch(connectSocket());
       toast.success("Account created successfully");
       return res.data;
     } catch (err) {
@@ -53,6 +54,7 @@ export const loginUser = createAsyncThunk(
     const axiosSecure = useAxiosSecure();
     try {
       const res = await axiosSecure.post("/auth/login", formData);
+      thunkAPI.dispatch(connectSocket());
       toast.success("Logged in successfully");
       return res.data;
     } catch (error) {

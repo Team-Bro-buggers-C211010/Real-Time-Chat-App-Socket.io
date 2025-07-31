@@ -11,7 +11,7 @@ export const socket = io(BASE_URL, {
 });
 
 socket.on("connect", () => {
-  console.log("Socket connected:", socket.id, "Namespace:", socket.nsp);
+  console.log("Socket connected:", socket.id);
 });
 
 socket.on("connect_error", (err) => {

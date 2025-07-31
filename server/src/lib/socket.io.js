@@ -22,12 +22,14 @@ export function getReceiverSocketId(userId) {
 const userSocketMap = {};
 
 io.on("connect", (socket) => {
-  console.log("A user connected:", socket.id, "Namespace:", socket.nsp.name);
-  console.log("Handshake query:", socket.handshake.query);
-  console.log("Handshake headers:", socket.handshake.headers);
+  console.log("A user connected:", socket.id);
 
   const userId = socket.handshake.query.userId || "anonymous";
-  userSocketMap[userId] = socket.id;
+  
+  if(userId){
+    userSocketMap[userId] = socket.id;
+  }
+
   console.log("Updated userSocketMap:", userSocketMap);
 
   io.emit("getOnlineUsers", Object.keys(userSocketMap));

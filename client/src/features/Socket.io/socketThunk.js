@@ -14,12 +14,15 @@ export const connectSocket = createAsyncThunk(
       console.warn("connectSocket: No user found, skipping connection");
       return thunkAPI.rejectWithValue("No authenticated user");
     }
+
     if (socket.connected) {
-      console.log("connectSocket: Socket already connected");
+      console.log("connectSocket: Socket already connected", socket.id);
       return;
     }
 
     console.log("Connecting socket without query");
+    
+    socket.io.opts.query = { userId: user._id };
     socket.connect();
 
     socket.off("getOnlineUsers");
@@ -41,6 +44,8 @@ export const connectSocket = createAsyncThunk(
 export const disconnectSocket = createAsyncThunk(
   "socket/disconnect",
   async () => {
-    if (socket.connected) socket.disconnect();
+    if (socket.connected) {
+      socket.disconnect();
+    }
   }
 );

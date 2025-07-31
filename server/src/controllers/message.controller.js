@@ -1,6 +1,7 @@
 import cloudinary from '../lib/cloudinary.js';
 import User from '../models/user.model.js';
 import Message from './../models/message.model.js';
+import { getReceiverSocketId } from '../lib/socket.io.js';
 export const getUsersForSideBar = async (req, res) => {
     try {
         const loggedInUserId = req.user._id;
@@ -40,10 +41,15 @@ export const getMessages = async (req, res) => {
 export const sendMessages = async (req, res) => {
     try {
         const { message: text , attachment: image } = req.body;
-        const { id: receiverId} = req.params;
+        const { id: receiverId } = req.params;
         const senderId = req.user._id;
 
-        let imageUrl;
+        const receiver = await User.findById(receiverId);
+        if (!receiver) {
+            return res.status(404).json({ message: 'Receiver not found' });
+        }
+
+        let imageUrl = "";
         if (image) {
             // upload image to cloudinary
             const uploadResponse = await cloudinary.uploader.upload(image);
@@ -56,8 +62,12 @@ export const sendMessages = async (req, res) => {
             text,
             image: imageUrl
         });
-
         await newMessage.save();
+
+        const receiverSocketId = getReceiverSocketId(receiverId);
+        if (receiverSocketId) {
+            io.to(receiverSocketId).emit('message', newMessage);
+        }
 
         res.status(200).json(newMessage);
 
