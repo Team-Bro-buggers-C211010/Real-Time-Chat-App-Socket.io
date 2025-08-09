@@ -40,7 +40,7 @@ const UserSideBar = () => {
             return (
               <li key={user._id} onClick={() => dispatch(setSelectedUser(user))} className={`w-full flex flex-wrap items-center gap-3 p-3 hover:bg-base-300 cursor-pointer ${selectedUser?._id === user._id ? "bg-base-300 ring-1 ring-base-300" : ""}`}>
                 <div className="relative">
-                  <img src={user.profileImage || "/avatarDemo.png"} alt={user.userName} className="size-12 sm:size-10 md:size-12 rounded-full object-cover" />
+                  <img src={user.profileImage || "/avatarDemo.png"} alt={user.userName} className="size-12 sm:size-10 md:size-12 rounded-full object-cover no-drag" />
                   {onlineUsers.includes(user._id) ? (
                     <span
                       className="absolute bottom-0 right-0 size-3 bg-green-500 

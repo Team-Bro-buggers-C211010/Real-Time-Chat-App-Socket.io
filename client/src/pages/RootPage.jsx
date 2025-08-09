@@ -25,14 +25,14 @@ const RootPage = () => {
 
     if (isCheckingAuth && !authUser) {
         return (
-            <div className="flex justify-center items-center h-screen">
+            <div className="flex justify-center items-center h-screen select-none">
                 <span className="loading loading-ring loading-xl text-emerald-400"></span>
             </div>
         )
     }
 
     return (
-        <div data-theme={theme}>
+        <div data-theme={theme} className="select-none">
             <Navbar />
             <Outlet />
         </div>
