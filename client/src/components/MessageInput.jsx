@@ -1,17 +1,19 @@
-import { Image, Send, X } from "lucide-react";
+import { Image, Send, Smile, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { sendMessage } from "../features/Chat/chatThunk";
 import { setPushNewChatMessages } from "../features/Chat/chatSlice";
 import { socket } from "../lib/socket";
+import EmojiPicker from "emoji-picker-react";
 
 const MessageInput = () => {
   const { selectedUser } = useSelector((state) => state.chat);
-  const { authUser } = useSelector((state) => state.auth); // Assuming auth state
+  const { authUser } = useSelector((state) => state.auth);
   const currentUserId = authUser?._id;
   const [message, setMessage] = useState("");
   const [attachment, setAttachment] = useState("");
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const fileInputRef = useRef(null);
   const dispatch = useDispatch();
 
@@ -34,17 +36,31 @@ const MessageInput = () => {
       toast.error("Please enter a message or select an image to send!!!");
       return;
     }
-    dispatch(sendMessage({ message, attachment, receiverId: selectedUser._id }));
+    await dispatch(
+      sendMessage({ message, attachment, receiverId: selectedUser._id })
+    );
     setMessage("");
     setAttachment("");
+    setShowEmojiPicker(false);
   };
 
+  const handleEmojiClick = (emojiObject) => {
+    setMessage((prev) => prev + emojiObject.emoji);
+  };
+
+
   useEffect(() => {
-    if (!selectedUser?._id || !currentUserId) return;
+    if (!selectedUser?._id || !currentUserId) {
+      console.warn("Skipping socket listener due to missing user IDs");
+      return;
+    }
 
     const handleNewMessage = (newMessage) => {
       console.log("Received newMessage:", newMessage);
-      if (!newMessage?._id) return;
+      if (!newMessage?._id) {
+        console.warn("Invalid message received:", newMessage);
+        return;
+      }
       if (
         (newMessage.senderId._id === currentUserId &&
           newMessage.receiverId._id === selectedUser._id) ||
@@ -63,7 +79,7 @@ const MessageInput = () => {
   }, [dispatch, selectedUser?._id, currentUserId]);
 
   return (
-    <div className="p-4 w-full">
+    <div className="p-4 w-full bg-base-100">
       {attachment && (
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
@@ -82,13 +98,35 @@ const MessageInput = () => {
         </div>
       )}
       <form onSubmit={handleMessageSubmit} className="flex items-center gap-2">
-        <div className="flex-1 flex gap-2 items-center">
+        <div className="relative flex-1 flex gap-2 items-center">
+          {showEmojiPicker && (
+            <div
+              className="absolute bottom-14 left-0 z-10"
+            >
+              <EmojiPicker
+                onEmojiClick={handleEmojiClick}
+                theme="auto"
+                emojiStyle="google"
+                lazyLoadEmojis={true}
+                width={300}
+                height={400}
+              />
+            </div>
+          )}
+          {/* Smiley Button */}
+          <button
+            type="button"
+            className="font-bold flex text-base-content btn btn-circle"
+            onClick={() => setShowEmojiPicker((prev) => !prev)}
+          >
+            <Smile className="size-5" />
+          </button>
           <input
             type="text"
             placeholder="Type a message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="w-full input input-bordered rounded-lg input-sm sm:input-md"
+            className="w-full input input-bordered rounded-full input-sm sm:input-md"
           />
           <input
             type="file"
@@ -99,17 +137,25 @@ const MessageInput = () => {
           />
           <button
             type="button"
-            className={`font-bold flex text-base-content btn btn-circle ${attachment ? "text-emerald-500" : "text-zinc-400"
-              }`}
+            className={`font-bold flex text-base-content btn btn-circle ${
+              attachment ? "text-base-content" : "text-zinc-400"
+            }`}
             onClick={() => fileInputRef.current?.click()}
           >
             <Image className="size-5" />
           </button>
         </div>
-        <button type="submit" className="cursor-pointer" disabled={!message && !attachment}>
+        <button
+          type="submit"
+          className="cursor-pointer"
+          disabled={!message && !attachment}
+        >
           <Send
-            className={`size-5 ${message || attachment ? "text-emerald-500" : "text-zinc-400 cursor-not-allowed"
-              }`}
+            className={`size-5 ${
+              message || attachment
+                ? "text-base-content"
+                : "text-zinc-400 cursor-not-allowed"
+            }`}
           />
         </button>
       </form>

@@ -51,7 +51,7 @@ const ChatContainer = () => {
                     <div className={`p-2 rounded-lg ${message?.senderId._id === selectedUser._id ? "bg-base-200" : "bg-primary text-primary-content"} max-w-[10rem] sm:max-w-[15rem] md:max-w-[20rem] space-y-2`}>
                       {message?.image && <img src={message?.image} className="w-fit object-cover no-drag" alt="sender image" />}
                       <div className="flex flex-col gap-1">
-                        <p className="text-sm">{message.text}</p>
+                        <p className="text-base">{message.text}</p>
                         <div className="flex w-full justify-end">
                           <p className={`text-[0.6rem] font-semibold ${message?.senderId._id === selectedUser._id ? "text-base-content/70" : "text-primary-content/70"}`}>{message.updatedAt &&
                             new Date(message.updatedAt).toLocaleTimeString([], {

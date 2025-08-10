@@ -57,6 +57,7 @@ const UserSideBar = () => {
                   <p className="font-semibold hidden lg:block">{user?.userName[0].toUpperCase() + user?.userName.slice(1)}</p>
                   <p className="text-xs md:text-base font-semibold hidden sm:block lg:hidden">{user?.userName.length > 10 ? user?.userName[0].toUpperCase() + user?.userName.slice(1, 10) + "..." : user?.userName[0].toUpperCase() + user?.userName.slice(1)}</p>
                   <p className="text-xs md:text-sm sm:hidden font-semibold">{user?.userName.length > 20 ? user?.userName[0].toUpperCase() + user?.userName.slice(1, 20) + "..." : user?.userName[0].toUpperCase() + user?.userName.slice(1)}</p>
+                  
                 </div>
               </li>
             );
