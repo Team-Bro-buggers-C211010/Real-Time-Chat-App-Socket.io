@@ -20,7 +20,10 @@ export const verifyToken = async (req, res, next) => {
         req.user = user;
         next();
     } catch (err) {
-        console.log("Error in verifyToken: ", err.message);
-        return res.status(500).json({message: "Internal server error"});
+        console.error("Error in verifyToken:", err.message);
+        if (err.name === "MongoServerError") {
+            return res.status(500).json({ message: "Database error", error: err.message });
+        }
+        res.status(401).json({ message: "Invalid token" });
     }
 }

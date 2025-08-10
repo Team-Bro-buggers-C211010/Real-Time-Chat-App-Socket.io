@@ -1,4 +1,3 @@
-// backend/lib/socket.io.js
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
@@ -15,18 +14,18 @@ const io = new Server(server, {
   path: "/socket.io/",
 });
 
+const userSocketMap = {};
+
 export function getReceiverSocketId(userId) {
   return userSocketMap[userId];
 }
 
-const userSocketMap = {};
-
 io.on("connect", (socket) => {
   console.log("A user connected:", socket.id);
 
-  const userId = socket.handshake.query.userId || "anonymous";
-  
-  if(userId){
+  const userId = socket.handshake.query.userId;
+
+  if (userId) {
     userSocketMap[userId] = socket.id;
   }
 
