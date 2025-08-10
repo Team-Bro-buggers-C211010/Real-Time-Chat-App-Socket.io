@@ -7,20 +7,16 @@ import { connectSocket } from "../features/Socket.io/socketThunk";
 import { socket } from "../lib/socket";
 
 const RootPage = () => {
-    const { authUser, isCheckingAuth, isLogin } = useSelector((state) => state.auth);
+    const { authUser, isCheckingAuth } = useSelector((state) => state.auth);
     const { theme } = useSelector((state) => state.theme);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        if (!authUser || isLogin) {
-            console.log("Dispatching checkAuth");
-            dispatch(checkAuth());
-        }
-    }, [dispatch, authUser]);
+        dispatch(checkAuth());
+    }, [dispatch]);
 
     useEffect(() => {
         if (authUser) {
-            console.log("Dispatching connectSocket with authUser:", authUser);
             dispatch(connectSocket());
 
             return () => {

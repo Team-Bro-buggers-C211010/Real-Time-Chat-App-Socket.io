@@ -6,7 +6,7 @@ import { logoutUser } from "../../features/Auth/authThunk";
 import { FaRegUser } from 'react-icons/fa';
 
 const Navbar = () => {
-  const { authUser } = useSelector((state) => state.auth)
+  const { authUser } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const dispatch = useDispatch();
 

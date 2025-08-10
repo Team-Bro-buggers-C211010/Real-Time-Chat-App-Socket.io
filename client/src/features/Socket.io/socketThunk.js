@@ -8,7 +8,6 @@ export const connectSocket = createAsyncThunk(
   async (_, thunkAPI) => {
     const state = thunkAPI.getState();
     const user = state.auth.authUser;
-    console.log("connectSocket - Auth state:", state.auth);
 
     if (!user) {
       console.warn("connectSocket: No user found, skipping connection");
@@ -16,28 +15,18 @@ export const connectSocket = createAsyncThunk(
     }
 
     if (socket.connected) {
-      console.log("connectSocket: Socket already connected", socket.id);
       return;
     }
-
-    console.log("Connecting socket without query");
     
     socket.io.opts.query = { userId: user._id };
     socket.connect();
 
     socket.off("getOnlineUsers");
     socket.on("getOnlineUsers", (userIds) => {
-      console.log("Received online users:", userIds);
       thunkAPI.dispatch(setOnlineUsers(userIds));
     });
 
     socket.off("newMessage");
-    socket.on("newMessage", (newMessage) => {
-      const selectedUser = state.chat.selectedUser;
-      if (newMessage.senderId === selectedUser?._id) {
-        console.log("Received new message:", newMessage);
-      }
-    });
   }
 );
 

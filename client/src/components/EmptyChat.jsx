@@ -1,5 +1,5 @@
 import { BiMessageSquareDots } from "react-icons/bi";
-const EmpytyChat = () => {
+const EmptyChat = () => {
     return (
         <div className="w-full flex-1 flex-col items-center justify-center p-16 bg-base-100/50 hidden sm:flex">
             <div className="max-w-md text-center space-y-6">
@@ -20,4 +20,4 @@ const EmpytyChat = () => {
     )
 }
 
-export default EmpytyChat
+export default EmptyChat
