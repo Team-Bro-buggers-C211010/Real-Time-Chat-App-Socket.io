@@ -20,6 +20,10 @@ export function getReceiverSocketId(userId) {
   return userSocketMap[userId];
 }
 
+export function getSenderSocketId(userId) {
+  return userSocketMap[userId];
+}
+
 io.on("connect", (socket) => {
   console.log("A user connected:", socket.id);
 

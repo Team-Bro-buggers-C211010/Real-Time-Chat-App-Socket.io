@@ -17,7 +17,7 @@ const ChatContainer = () => {
     return () => {
       socket.off("newMessage");
     };
-  }, [dispatch, selectedUser?._id]);
+  }, [selectedUser?._id]);
 
   useEffect(() => {
     if (!isChatLoading && chatMessagesRef.current) {
@@ -66,8 +66,8 @@ const ChatContainer = () => {
                     <div>
                       {
                         (chatMessages[idx - 1]?.senderId._id !== message?.senderId._id) || chatMessages[idx - 1]?.updatedAt?.split('T')[0] !== message?.updatedAt?.split('T')[0] ? (
-                          <img src={message?.senderId._id === selectedUser._id ? "" : message.senderId?.profileImage != "" ? message.senderId?.profileImage : "/avatarDemo.png"} className={`size-6 sm:size-8 md:size-10 rounded-full object-cover ${message?.senderId._id === selectedUser._id && "hidden"} no-drag`} alt="" />
-                        ) : (message?.senderId._id !== selectedUser._id) && <img className="size-6 sm:size-8 md:size-10  rounded-full invisible no-drag" src="" alt="" />
+                          <img src={message?.senderId._id === selectedUser._id ? "" : message.senderId?.profileImage != "" ? message.senderId?.profileImage : "/avatarDemo.png"} className={`size-10 rounded-full object-cover ${message?.senderId._id === selectedUser._id && "hidden"} no-drag`} alt="" />
+                        ) : (message?.senderId._id !== selectedUser._id) && <img className="size-10  rounded-full invisible no-drag" src="" alt="" />
                       }
                     </div>
                   </div>

@@ -39,7 +39,6 @@ const MessageInput = () => {
     await dispatch(
       sendMessage({ message, attachment, receiverId: selectedUser._id })
     );
-    await dispatch(fetchLastMessages());
     setMessage("");
     setAttachment("");
     setShowEmojiPicker(false);
@@ -56,20 +55,21 @@ const MessageInput = () => {
       return;
     }
 
-    const handleNewMessage = (newMessage) => {
+    const handleNewMessage = async (newMessage) => {
       console.log("Received newMessage:", newMessage);
       if (!newMessage?._id) {
         console.warn("Invalid message received:", newMessage);
         return;
       }
       if (
-        (newMessage.senderId._id === currentUserId &&
-          newMessage.receiverId._id === selectedUser._id) ||
+        // (newMessage.senderId._id === currentUserId &&
+        //   newMessage.receiverId._id === selectedUser._id) ||
         (newMessage.senderId._id === selectedUser._id &&
           newMessage.receiverId._id === currentUserId)
       ) {
-        dispatch(setPushNewChatMessages(newMessage));
+        await dispatch(setPushNewChatMessages(newMessage));
       }
+      await dispatch(fetchLastMessages());
     };
 
     socket.on("newMessage", handleNewMessage);

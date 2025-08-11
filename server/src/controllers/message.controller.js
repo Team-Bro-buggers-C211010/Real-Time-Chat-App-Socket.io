@@ -3,6 +3,7 @@ import User from "../models/user.model.js";
 import Message from "../models/message.model.js";
 import {
   getReceiverSocketId,
+  getSenderSocketId,
   io,
 } from "../lib/socket.io.js";
 
@@ -105,9 +106,14 @@ export const sendMessages = async (req, res) => {
       .lean();
 
     const receiverSocketId = getReceiverSocketId(receiverId);
+    const senderSocketId = getSenderSocketId(senderId);
 
     if (receiverSocketId) {
       io.to(receiverSocketId).emit("newMessage", populatedMessage);
+    }
+
+    if(senderId) {
+      io.to(senderSocketId).emit("newMessage", populatedMessage);
     }
 
     res.status(200).json(populatedMessage);
