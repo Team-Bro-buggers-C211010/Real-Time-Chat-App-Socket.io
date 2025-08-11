@@ -6,15 +6,47 @@ import {
   io,
 } from "../lib/socket.io.js";
 
-export const getUsersForSideBar = async (req, res) => {
+export const getLastMessages = async (req, res) => {
   try {
-    const loggedInUserId = req.user._id;
-    const filteredUsers = await User.find({
-      _id: { $ne: loggedInUserId },
-    }).select("-password");
-    res.status(200).json(filteredUsers);
+    const myId = req.user._id;
+
+    // Step 1: Fetch all users except the logged-in user (same as getUsersForSideBar)
+    const users = await User.find({ _id: { $ne: myId } })
+      .select("userName profileImage email")
+      .lean();
+
+    // Step 2: Fetch the last message for each user
+    const lastMessages = await Promise.all(
+      users.map(async (user) => {
+        const lastMessage = await Message.find({
+          $or: [
+            { senderId: myId, receiverId: user._id },
+            { senderId: user._id, receiverId: myId },
+          ],
+        })
+          .populate("senderId", "userName profileImage email")
+          .populate("receiverId", "userName profileImage email")
+          .lean()
+          .sort({ createdAt: -1 })
+          .limit(1); // Explicitly limit to 1 message
+
+        return {
+          user, // User details
+          lastMessage: lastMessage[0] || null, // First message or null
+        };
+      })
+    );
+
+    // Step 3: Sort users by last message timestamp (WhatsApp-like)
+    const sortedLastMessages = lastMessages.sort((a, b) => {
+      const aTime = a.lastMessage ? new Date(a.lastMessage.createdAt).getTime() : 0;
+      const bTime = b.lastMessage ? new Date(b.lastMessage.createdAt).getTime() : 0;
+      return bTime - aTime; // Most recent first
+    });
+
+    res.status(200).json(sortedLastMessages);
   } catch (err) {
-    console.log("Error in getUsersForSideBar: ", err.message);
+    console.log("Error in getLastMessages: ", err.message);
     res.status(500).json({ message: "Internal server error" });
   }
 };
@@ -40,6 +72,7 @@ export const getMessages = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 export const sendMessages = async (req, res) => {
   try {

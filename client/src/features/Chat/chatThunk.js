@@ -18,19 +18,19 @@ export const fetchChatMessages = createAsyncThunk(
   }
 );
 
-export const fetchUsers = createAsyncThunk(
-  "chat/fetchUsers",
-  async (_, thunkAPI) => {
-    const axiosSecure = useAxiosSecure();
-    try {
-      const res = await axiosSecure.get("/messages/users");
-      return res.data;
-    } catch (err) {
-      toast.error(err.response?.data?.message || "Failed to fetch users");
-      return thunkAPI.rejectWithValue(err.response?.data);
-    }
-  }
-);
+// export const fetchUsers = createAsyncThunk(
+//   "chat/fetchUsers",
+//   async (_, thunkAPI) => {
+//     const axiosSecure = useAxiosSecure();
+//     try {
+//       const res = await axiosSecure.get("/messages/users");
+//       return res.data;
+//     } catch (err) {
+//       toast.error(err.response?.data?.message || "Failed to fetch users");
+//       return thunkAPI.rejectWithValue(err.response?.data);
+//     }
+//   }
+// );
 
 export const sendMessage = createAsyncThunk(
   "chat/sendMessage",
@@ -41,6 +41,20 @@ export const sendMessage = createAsyncThunk(
       return res.data;
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to send message");
+      return thunkAPI.rejectWithValue(err.response?.data);
+    }
+  }
+);
+
+export const fetchLastMessages = createAsyncThunk(
+  "chat/fetchLastMessages",
+  async (_, thunkAPI) => {
+    const axiosSecure = useAxiosSecure();
+    try {
+      const res = await axiosSecure.get("/messages/last/messages");
+      return res.data;
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Failed to fetch last messages");
       return thunkAPI.rejectWithValue(err.response?.data);
     }
   }

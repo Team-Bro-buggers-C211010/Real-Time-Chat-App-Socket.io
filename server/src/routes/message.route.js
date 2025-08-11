@@ -1,10 +1,10 @@
 import express from 'express';
 import { verifyToken } from '../middleware/auth.middleware.js';
-import { getMessages, getUsersForSideBar, sendMessages } from '../controllers/message.controller.js';
+import { getLastMessages, getMessages, sendMessages } from '../controllers/message.controller.js';
 
 const router = express.Router();
 
-router.get("/users", verifyToken, getUsersForSideBar);
+router.get("/last/messages", verifyToken, getLastMessages);
 router.get("/:id", verifyToken, getMessages);
 router.post("/send/:id", verifyToken, sendMessages);
 

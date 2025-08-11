@@ -1,12 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { sendMessage } from "./chatThunk";
+import { fetchLastMessages, sendMessage } from "./chatThunk";
 
 const initialState = {
   chatMessages: [],
-  users: [],
+  lastMessagesForAllSidebarsUsers: [],
   selectedUser: null,
-  isUserLoading: false,
   isChatLoading: false,
+  isLastMessagesLoading: false,
 };
 
 const chatSlice = createSlice({
@@ -43,16 +43,6 @@ const chatSlice = createSlice({
       .addCase("chat/fetchChatMessages/rejected", (state) => {
         state.isChatLoading = false;
       })
-      .addCase("chat/fetchUsers/pending", (state) => {
-        state.isUserLoading = true;
-      })
-      .addCase("chat/fetchUsers/fulfilled", (state, action) => {
-        state.users = action.payload;
-        state.isUserLoading = false;
-      })
-      .addCase("chat/fetchUsers/rejected", (state) => {
-        state.isUserLoading = false;
-      })
       .addCase(sendMessage.pending, (state) => {
         state.isChatLoading = true;
       })
@@ -64,6 +54,16 @@ const chatSlice = createSlice({
       })
       .addCase(sendMessage.rejected, (state) => {
         state.isChatLoading = false;
+      })
+      .addCase(fetchLastMessages.pending, (state) => {
+        state.isLastMessagesLoading = true;
+      })
+      .addCase(fetchLastMessages.fulfilled, (state, action) => {
+        state.lastMessagesForAllSidebarsUsers = action.payload || [];
+        state.isLastMessagesLoading = false;
+      })
+      .addCase(fetchLastMessages.rejected, (state) => {
+        state.isLastMessagesLoading = false;
       });
   },
 });
