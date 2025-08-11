@@ -2,7 +2,7 @@ import { Image, Send, Smile, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { sendMessage } from "../features/Chat/chatThunk";
+import { fetchLastMessages, sendMessage } from "../features/Chat/chatThunk";
 import { setPushNewChatMessages } from "../features/Chat/chatSlice";
 import { socket } from "../lib/socket";
 import EmojiPicker from "emoji-picker-react";
@@ -39,6 +39,7 @@ const MessageInput = () => {
     await dispatch(
       sendMessage({ message, attachment, receiverId: selectedUser._id })
     );
+    await dispatch(fetchLastMessages());
     setMessage("");
     setAttachment("");
     setShowEmojiPicker(false);
