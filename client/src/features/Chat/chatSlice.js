@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { fetchLastMessages, sendMessage } from "./chatThunk";
+import { fetchLastMessages, sendMessage } from "./chatThunk.js";
 
 const initialState = {
   chatMessages: [],

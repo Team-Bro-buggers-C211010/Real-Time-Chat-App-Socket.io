@@ -1,10 +1,10 @@
 import { Image, Send, Smile, X } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, memo } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchLastMessages, sendMessage } from "../features/Chat/chatThunk";
-import { setPushNewChatMessages } from "../features/Chat/chatSlice";
-import { socket } from "../lib/socket";
+import { fetchLastMessages, sendMessage } from "../features/Chat/chatThunk.js";
+import { setPushNewChatMessages } from "../features/Chat/chatSlice.js";
+import { socket } from "../lib/socket.js";
 import EmojiPicker from "emoji-picker-react";
 
 const MessageInput = () => {
@@ -12,64 +12,71 @@ const MessageInput = () => {
   const { authUser } = useSelector((state) => state.auth);
   const currentUserId = authUser?._id;
   const [message, setMessage] = useState("");
-  const [attachment, setAttachment] = useState("");
+  const [attachment, setAttachment] = useState(null); // Use null instead of empty string for clarity
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const fileInputRef = useRef(null);
   const dispatch = useDispatch();
 
+  // Handle image upload with validation
   const handleImage = (e) => {
-    const file = e.target.files[0];
-    if (!file.type.includes("image")) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
       toast.error("Please select an image file");
       return;
     }
+
+    if (file.size > 5 * 1024 * 1024) { // Limit to 5MB
+      toast.error("Image size must be less than 5MB");
+      return;
+    }
+
     const reader = new FileReader();
-    reader.readAsDataURL(file);
     reader.onloadend = () => {
       setAttachment(reader.result);
     };
+    reader.onerror = () => {
+      toast.error("Failed to read image file");
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleMessageSubmit = async (e) => {
     e.preventDefault();
-    if (!message && !attachment) {
-      toast.error("Please enter a message or select an image to send!!!");
+    if (!message.trim() && !attachment) {
+      toast.error("Please enter a message or select an image");
       return;
     }
-    await dispatch(
-      sendMessage({ message, attachment, receiverId: selectedUser._id })
-    );
-    setMessage("");
-    setAttachment("");
-    setShowEmojiPicker(false);
+
+    try {
+      await dispatch(
+        sendMessage({ message: message.trim(), attachment, receiverId: selectedUser._id })
+      ).unwrap();
+      setMessage("");
+      setAttachment(null);
+      setShowEmojiPicker(false);
+      fileInputRef.current.value = null;
+    } catch (error) {
+      toast.error("Failed to send message" + error?.message);
+    }
   };
 
   const handleEmojiClick = (emojiObject) => {
     setMessage((prev) => prev + emojiObject.emoji);
   };
 
-
+  // Socket handling for new messages
   useEffect(() => {
-    if (!selectedUser?._id || !currentUserId) {
-      console.warn("Skipping socket listener due to missing user IDs");
-      return;
-    }
+    if (!selectedUser?._id || !currentUserId) return;
 
     const handleNewMessage = async (newMessage) => {
-      console.log("Received newMessage:", newMessage);
-      if (!newMessage?._id) {
-        console.warn("Invalid message received:", newMessage);
-        return;
-      }
-      if (
-        // (newMessage.senderId._id === currentUserId &&
-        //   newMessage.receiverId._id === selectedUser._id) ||
-        (newMessage.senderId._id === selectedUser._id &&
-          newMessage.receiverId._id === currentUserId)
-      ) {
+      if (!newMessage?._id) return;
+
+      if (newMessage.senderId._id === selectedUser._id && newMessage.receiverId._id === currentUserId) {
         await dispatch(setPushNewChatMessages(newMessage));
+        await dispatch(fetchLastMessages());
       }
-      await dispatch(fetchLastMessages());
     };
 
     socket.on("newMessage", handleNewMessage);
@@ -85,13 +92,16 @@ const MessageInput = () => {
         <div className="mb-3 flex items-center gap-2">
           <div className="relative">
             <img
-              className="size-12 md:size-16 object-cover rounded-lg border border-zinc-700"
+              className="size-12 md:size-16 object-cover rounded-lg border border-base-300"
               src={attachment}
               alt="Preview Attachment"
             />
             <button
-              onClick={() => setAttachment("")}
-              className="absolute -top-1.5 -right-1.5 size-5 bg-base-300 text-red-500 rounded-full flex items-center justify-center cursor-pointer"
+              onClick={() => {
+                setAttachment(null);
+                fileInputRef.current.value = null;
+              }}
+              className="absolute -top-1.5 -right-1.5 size-5 bg-base-300 text-red-500 rounded-full flex items-center justify-center"
             >
               <X className="size-4" />
             </button>
@@ -101,9 +111,7 @@ const MessageInput = () => {
       <form onSubmit={handleMessageSubmit} className="flex items-center gap-2">
         <div className="relative flex-1 flex gap-2 items-center">
           {showEmojiPicker && (
-            <div
-              className="absolute bottom-14 left-0 z-10"
-            >
+            <div className="absolute bottom-14 left-0 z-10">
               <EmojiPicker
                 onEmojiClick={handleEmojiClick}
                 theme="auto"
@@ -114,10 +122,9 @@ const MessageInput = () => {
               />
             </div>
           )}
-          {/* Smiley Button */}
           <button
             type="button"
-            className="font-bold flex text-base-content btn btn-circle"
+            className="btn btn-circle btn-sm text-base-content"
             onClick={() => setShowEmojiPicker((prev) => !prev)}
           >
             <Smile className="size-5" />
@@ -127,7 +134,7 @@ const MessageInput = () => {
             placeholder="Type a message..."
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            className="w-full input input-bordered rounded-full input-sm sm:input-md"
+            className="flex-1 input input-bordered rounded-full input-sm sm:input-md"
           />
           <input
             type="file"
@@ -138,9 +145,7 @@ const MessageInput = () => {
           />
           <button
             type="button"
-            className={`font-bold flex text-base-content btn btn-circle ${
-              attachment ? "text-base-content" : "text-zinc-400"
-            }`}
+            className={`btn btn-circle btn-sm ${attachment ? "text-base-content" : "text-base-content/50"}`}
             onClick={() => fileInputRef.current?.click()}
           >
             <Image className="size-5" />
@@ -148,15 +153,11 @@ const MessageInput = () => {
         </div>
         <button
           type="submit"
-          className="cursor-pointer"
-          disabled={!message && !attachment}
+          className="btn btn-circle btn-sm"
+          disabled={!message.trim() && !attachment}
         >
           <Send
-            className={`size-5 ${
-              message || attachment
-                ? "text-base-content"
-                : "text-zinc-400 cursor-not-allowed"
-            }`}
+            className={`size-5 ${message.trim() || attachment ? "text-base-content" : "text-base-content/50"}`}
           />
         </button>
       </form>
@@ -164,4 +165,6 @@ const MessageInput = () => {
   );
 };
 
-export default MessageInput;
+MessageInput.displayName = "MessageInput";
+
+export default memo(MessageInput);

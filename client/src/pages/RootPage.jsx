@@ -1,7 +1,7 @@
-import { Outlet } from "react-router-dom"
-import Navbar from "../components/shared/Navbar"
-import { useDispatch, useSelector } from "react-redux"
-import { useEffect } from "react";
+import { Outlet } from "react-router-dom";
+import Navbar from "../components/shared/Navbar";
+import { useDispatch, useSelector } from "react-redux";
+import { useEffect, memo } from "react";
 import { checkAuth } from "../features/Auth/authThunk";
 import { connectSocket } from "../features/Socket.io/socketThunk";
 import { socket } from "../lib/socket";
@@ -18,7 +18,6 @@ const RootPage = () => {
     useEffect(() => {
         if (authUser) {
             dispatch(connectSocket());
-
             return () => {
                 socket.disconnect();
             };
@@ -27,18 +26,23 @@ const RootPage = () => {
 
     if (isCheckingAuth && !authUser) {
         return (
-            <div className="flex justify-center items-center h-screen select-none">
-                <span className="loading loading-ring loading-xl text-primary-content"></span>
+            <div className="flex justify-center items-center h-screen bg-base-200">
+                <span
+                    className="loading loading-ring loading-xl text-primary"
+                    aria-live="polite"
+                ></span>
             </div>
-        )
+        );
     }
 
     return (
-        <div data-theme={theme} className="select-none">
+        <div data-theme={theme} className="min-h-screen bg-base-200">
             <Navbar />
             <Outlet />
         </div>
-    )
-}
+    );
+};
 
-export default RootPage
+RootPage.displayName = "RootPage";
+
+export default memo(RootPage);

@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
-import authReducer from "../features/Auth/authSlice"
-import themeReducer from "../features/Theme/themeSlice";
-import chatReducer from "../features/Chat/chatSlice";
-import socketReducer from "../features/Socket.io/socketSlice";
+import authReducer from "../features/Auth/authSlice.js"
+import themeReducer from "../features/Theme/themeSlice.js";
+import chatReducer from "../features/Chat/chatSlice.js";
+import socketReducer from "../features/Socket.io/socketSlice.js";
 
 const store = configureStore({
     reducer: {

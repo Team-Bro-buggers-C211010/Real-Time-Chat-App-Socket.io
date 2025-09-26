@@ -1,7 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import useAxiosSecure from "../../hooks/useAxiosSecure";
+import useAxiosSecure from "../../hooks/useAxiosSecure.jsx";
 import toast from "react-hot-toast";
-import { connectSocket, disconnectSocket } from "../Socket.io/socketThunk";
+import { connectSocket, disconnectSocket } from "../Socket.io/socketThunk.js";
 
 export const checkAuth = createAsyncThunk(
   "auth/checkAuth",

@@ -1,7 +1,7 @@
 // frontend/features/Socket.io/socketThunk.js
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { socket } from "../../lib/socket";
-import { setOnlineUsers } from "./socketSlice";
+import { socket } from "../../lib/socket.js";
+import { setOnlineUsers } from "./socketSlice.js";
 
 export const connectSocket = createAsyncThunk(
   "socket/connect",
